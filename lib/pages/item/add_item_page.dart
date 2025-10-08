@@ -16,10 +16,10 @@ class AddItemPage extends StatefulWidget {
 }
 
 class AddItemPageState extends State<AddItemPage> {
-  final _nameCtrl    = TextEditingController();
-  final _titleCtrl   = TextEditingController();
-  final _descCtrl    = TextEditingController();
-  final _priceCtrl   = TextEditingController();
+  final _nameCtrl = TextEditingController();
+  final _titleCtrl = TextEditingController();
+  final _descCtrl = TextEditingController();
+  final _priceCtrl = TextEditingController();
   final _contactCtrl = TextEditingController();
   File? _image;
   final picker = ImagePicker();
@@ -43,12 +43,12 @@ class AddItemPageState extends State<AddItemPage> {
     final svc = Provider.of<SupabaseService>(context, listen: false);
 
     await svc.addItem(
-      title:        _titleCtrl.text.trim(),
-      desc:         _descCtrl.text.trim(),
-      price:        double.tryParse(_priceCtrl.text) ?? 0,
-      contact:      _contactCtrl.text.trim(),
+      title: _titleCtrl.text.trim(),
+      desc: _descCtrl.text.trim(),
+      price: double.tryParse(_priceCtrl.text) ?? 0,
+      contact: _contactCtrl.text.trim(),
       uploaderName: _nameCtrl.text.trim(),
-      image:        _image!,
+      image: _image!,
     );
 
     setState(() => _uploading = false);
@@ -68,7 +68,11 @@ class AddItemPageState extends State<AddItemPage> {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF7209B7), Color(0xFFFF006E)],
+          colors: [
+            Color(0xFF2E335A), // deep indigo
+            Color(0xFF4B4376), // violet-gray
+            Color(0xFFB37BA4), // blush mauve
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -77,18 +81,20 @@ class AddItemPageState extends State<AddItemPage> {
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
-
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
-            '✨ Add Your Thrift',
-            style: GoogleFonts.poppins(
-                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+            'Add Your Thrift ✨',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 26,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFFF4EDE1),
+              letterSpacing: 1.2,
+            ),
           ),
           centerTitle: true,
         ),
-
         body: SafeArea(
           bottom: false,
           child: SingleChildScrollView(
@@ -96,7 +102,6 @@ class AddItemPageState extends State<AddItemPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Title field
                 CustomInputField(
                   controller: _titleCtrl,
                   label: 'Item Title',
@@ -104,7 +109,6 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Description
                 CustomInputField(
                   controller: _descCtrl,
                   label: 'Description',
@@ -113,7 +117,6 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Price
                 CustomInputField(
                   controller: _priceCtrl,
                   label: 'Price (Php)',
@@ -122,7 +125,6 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Name
                 CustomInputField(
                   controller: _nameCtrl,
                   label: 'Your Display Name',
@@ -130,7 +132,6 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Contact
                 CustomInputField(
                   controller: _contactCtrl,
                   label: 'Contact Email',
@@ -138,21 +139,25 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 24),
 
-                // Image picker
                 _image == null
                     ? ElevatedButton.icon(
                   icon: const Icon(Icons.photo_library, size: 24),
                   label: Text(
                     'Choose Photo',
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.9),
-                    foregroundColor: Colors.deepPurple,
+                    backgroundColor: const Color(0xFFF4EDE1)
+                        .withOpacity(0.95), // soft ivory
+                    foregroundColor: const Color(0xFF4B4376), // muted violet
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(14),
                     ),
+                    elevation: 5,
                   ),
                   onPressed: pickImage,
                 )
@@ -160,44 +165,54 @@ class AddItemPageState extends State<AddItemPage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.file(_image!, height: 180, fit: BoxFit.cover),
+                      child: Image.file(
+                        _image!,
+                        height: 180,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     TextButton(
                       onPressed: () => setState(() => _image = null),
                       child: Text(
                         'Re-pick Image',
-                        style: GoogleFonts.poppins(color: Colors.white70),
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFFF4EDE1).withOpacity(0.8),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 24),
 
-                // Upload button
                 ElevatedButton(
                   onPressed: canUpload ? _handleUpload : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepPurple,
+                    backgroundColor: const Color(0xFFB37BA4), // soft mauve
+                    foregroundColor: const Color(0xFFF4EDE1), // ivory text
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    elevation: 6,
+                    elevation: 7,
+                    shadowColor: Colors.black26,
                   ),
                   child: _uploading
                       ? const SizedBox(
                     width: 24,
                     height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
                   )
                       : Text(
                     'Upload Item',
                     style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ),

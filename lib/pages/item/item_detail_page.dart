@@ -22,9 +22,12 @@ class ItemDetailPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFF72585), Color(0xFF3A0CA3)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF8E2DE2), // violet-magenta
+              Color(0xFF4A00E0), // deep indigo
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
         child: SafeArea(
@@ -64,12 +67,12 @@ class ItemDetailPage extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () => Navigator.pop(context),
-                            child:
-                            const Icon(Icons.arrow_back_ios, color: Colors.white),
+                            child: const Icon(Icons.arrow_back_ios,
+                                color: Colors.white),
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Details',
+                            'Item Details',
                             style: GoogleFonts.poppins(
                               fontSize: 22,
                               fontWeight: FontWeight.w600,
@@ -80,13 +83,15 @@ class ItemDetailPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
 
-                      // Tappable image with Hero
+                      // Hero image
                       GestureDetector(
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>
-                                FullScreenImagePage(itemId: item.id, imageUrl: item.imageUrl),
+                            builder: (_) => FullScreenImagePage(
+                              itemId: item.id,
+                              imageUrl: item.imageUrl,
+                            ),
                           ),
                         ),
                         child: Hero(
@@ -96,9 +101,9 @@ class ItemDetailPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: const [
                                 BoxShadow(
-                                  color: Colors.black38,
-                                  blurRadius: 12,
-                                  offset: Offset(0, 6),
+                                  color: Colors.black45,
+                                  blurRadius: 15,
+                                  offset: Offset(0, 8),
                                 ),
                               ],
                             ),
@@ -118,9 +123,10 @@ class ItemDetailPage extends StatelessWidget {
                       Text(
                         item.title,
                         style: GoogleFonts.poppins(
-                          fontSize: 26,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
+                          height: 1.3,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -129,7 +135,7 @@ class ItemDetailPage extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
-                          color: Colors.yellowAccent,
+                          color: const Color(0xFFFFD700), // gold accent
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -138,8 +144,15 @@ class ItemDetailPage extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.white.withOpacity(0.95),
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 8,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,18 +162,22 @@ class ItemDetailPage extends StatelessWidget {
                               style: GoogleFonts.poppins(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.deepPurple,
+                                color: Color(0xFF4A00E0),
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               item.description,
-                              style: GoogleFonts.poppins(fontSize: 14),
+                              style: GoogleFonts.poppins(
+                                fontSize: 15,
+                                color: Colors.black87,
+                                height: 1.5,
+                              ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
 
                       // Info chips
                       SizedBox(
@@ -169,13 +186,20 @@ class ItemDetailPage extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              InfoChip(icon: Icons.person, text: item.uploadedBy),
+                              InfoChip(
+                                icon: Icons.person,
+                                text: item.uploadedBy,
+                              ),
                               const SizedBox(width: 8),
-                              InfoChip(icon: Icons.contact_mail, text: item.contactInfo),
+                              InfoChip(
+                                icon: Icons.contact_mail,
+                                text: item.contactInfo,
+                              ),
                               const SizedBox(width: 8),
                               InfoChip(
                                 icon: Icons.calendar_today,
-                                text: '${item.createdAt.month}/${item.createdAt.day}/${item.createdAt.year}',
+                                text:
+                                '${item.createdAt.month}/${item.createdAt.day}/${item.createdAt.year}',
                               ),
                             ],
                           ),
@@ -191,17 +215,20 @@ class ItemDetailPage extends StatelessWidget {
                     right: 16,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellowAccent,
+                        backgroundColor: const Color(0xFF00F5D4), // bright teal accent
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(14),
                         ),
+                        shadowColor: Colors.black45,
+                        elevation: 6,
                       ),
                       onPressed: () async {
                         final email = snap.data!.contactInfo.trim();
-                        final subject =
-                        Uri.encodeComponent('Inquiry about "${item.title}"');
-                        final uri = Uri.parse('mailto:$email?subject=$subject');
+                        final subject = Uri.encodeComponent(
+                            'Inquiry about "${item.title}"');
+                        final uri =
+                        Uri.parse('mailto:$email?subject=$subject');
                         try {
                           await launchUrl(uri,
                               mode: LaunchMode.externalApplication);
@@ -210,12 +237,14 @@ class ItemDetailPage extends StatelessWidget {
                             context: context,
                             builder: (_) => AlertDialog(
                               title: Text('Contact Owner',
-                                  style: GoogleFonts.poppins()),
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600)),
                               content: SelectableText(email,
                                   style: GoogleFonts.poppins()),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.pop(context),
+                                  onPressed: () =>
+                                      Navigator.pop(context),
                                   child: Text('Close',
                                       style: GoogleFonts.poppins()),
                                 ),
@@ -229,7 +258,7 @@ class ItemDetailPage extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple,
+                          color: const Color(0xFF3A0CA3),
                         ),
                       ),
                     ),
